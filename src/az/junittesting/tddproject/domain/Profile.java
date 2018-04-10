@@ -11,7 +11,8 @@ public class Profile {
 
     public boolean matches(Criterion criterion) {
         Answer answer = getMatchingProfileAnswer(criterion);
-        return criterion.getAnswer().match(answer);
+        return criterion.getWeight() == Weight.DontCare ||
+                criterion.getAnswer().match(answer);
     }
 
     public void add(Answer answer){
@@ -20,5 +21,26 @@ public class Profile {
 
     private Answer getMatchingProfileAnswer(Criterion criterion){
         return answers.get(criterion.getAnswer().getQuestionText());
+    }
+
+    public boolean matches(Criteria criteria) {
+        boolean matches = false;
+        for (Criterion criterion: criteria){
+            if (matches(criterion))
+                matches = true;
+            else if (criterion.getWeight() == Weight.Important)
+                return false;
+        }
+        return matches;
+    }
+
+    public ProfileMatch match(Criteria criteria) {
+        ProfileMatch profileMatch = new ProfileMatch();
+        for(Criterion criterion: criteria){
+            if(matches(criterion)){
+                profileMatch.add(criterion);
+            }
+        }
+        return profileMatch;
     }
 }
