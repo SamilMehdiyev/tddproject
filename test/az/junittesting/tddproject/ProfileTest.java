@@ -13,7 +13,7 @@ public class ProfileTest {
 
     Profile profile;
     Question questionIsThereRelocation;
-    Answer answerIsThereRelocation;
+    Answer answerThereISRelocation, answerThereIsNotRelocation;
 
     @Before
     public void initializeProfile(){
@@ -21,19 +21,16 @@ public class ProfileTest {
     }
     
     @Before
-    public void createQuestionIsThereRelocation(){
+    public void createQuestionAndAnswer(){
         questionIsThereRelocation = new BooleanQuestion(1, "Relocation package?");
-    }
-
-    @Before
-    public void createAnswerIsThereRelocation(){
-
+        answerThereISRelocation = new Answer(questionIsThereRelocation, Bool.TRUE);
+        answerThereIsNotRelocation = new Answer(questionIsThereRelocation, Bool.FALSE);
     }
 
     @Test
     public void matchNothingWhenProfileEmpty(){
 
-        Criterion criterion = new Criterion(answerIsThereRelocation, Weight.DontCare);
+        Criterion criterion = new Criterion(answerThereISRelocation, Weight.DontCare);
 
         boolean result = profile.matches(criterion);
 
@@ -43,8 +40,8 @@ public class ProfileTest {
     @Test
     public void matchesWhenProfileContainsMatchingAnswer(){
 
-        profile.add(answerIsThereRelocation);
-        Criterion criterion = new Criterion(answerIsThereRelocation, Weight.Important);
+        profile.add(answerThereIsNotRelocation);
+        Criterion criterion = new Criterion(answerThereISRelocation, Weight.Important);
 
         boolean result = profile.matches(criterion);
 
